@@ -1,4 +1,4 @@
-# Finite automaton to regular expression to finite wutomaton in prolog
+# Finite automaton to regular expression to finite automaton in prolog
 
 ## Introduction
 
@@ -7,6 +7,9 @@ This project was created as a final project for the non-procedural programming c
 
 ### Copyright
 You may use and edit the code or any of its parts for non-commercial uses. You must, however, state that this is not your own code, i.e., using this code alone to obtain a credit at your university is not allowed.
+
+### Credit
+The algorithms used in this project were inspired by those taught by [Mgr. Marta Vomlelová PhD.](http://ktiml.mff.cuni.cz/~marta/). This project was supervised by [Mgr. Václav Končický](https://kam.mff.cuni.cz/~koncicky/). The course was lead by [doc. RNDr. Tomáš Dvořák, CSc.](https://ksvi.mff.cuni.cz/~dvorak/home.html).
 
 ### Specification
 This project written in [Prolog language](https://en.wikipedia.org/wiki/Prolog) demonstrates the conversion from [FSM](https://en.wikipedia.org/wiki/Finite-state_machine) to [regular expression](https://en.wikipedia.org/wiki/Regular_expression) and vice versa.
@@ -21,7 +24,7 @@ Additionally, two predicates for parsing string by FSM are available: `dfa_parse
 
 ### Prerequirements
 
-This projects requires Prolog installed on your computer. [SWI-Prolog](https://www.swi-prolog.org/) was used for developing the project. This user manual will use SWI-Prolog specific names, such as the `swipl` command.
+This project requires Prolog installed on your computer. [SWI-Prolog](https://www.swi-prolog.org/) was used for developing the project. This user manual will use SWI-Prolog-specific names, such as the `swipl` command.
 
 ### Notation
 #### Regexp
@@ -36,14 +39,14 @@ There are 7 specific symbols for regular expressions:
 
 Every other symbol will be considered a regular symbol. Symbols can only be one character long.
 
-Every operation has to be explicitely stated, e.g. the expression $ab+c$ would be denoted by `a.b+c`.
+Every operation has to be explicitly stated, e.g. the expression $ab+c$ would be denoted by `a.b+c`.
 
 The priority of the operators is as follows (highest to lowest): iteration, concatenation, alternation.
 
-__Note:__ In some contexts you may need to escape the `\`, resulting in double backslash `\\`.
+__Note:__ In some contexts you may need to escape the `\`, resulting in a double backslash `\\`.
 
 #### DFA
-[Deterministic finite automaton](https://en.wikipedia.org/wiki/Deterministic_finite_automaton) is represented by a compunnd term:
+[Deterministic finite automaton](https://en.wikipedia.org/wiki/Deterministic_finite_automaton) is represented by a compound term:
 
 ```prolog
 dfa(StartState, TransitionFunction, FinishStates)
@@ -52,7 +55,7 @@ dfa(StartState, TransitionFunction, FinishStates)
 Where:
 * `StartState` is a name of a state, typically a number,
 * `TransitionFunction` is a list of transition rules:
-    * transition rule is a triple `[Current, Input, Next]`, which denotes that the automaton transitions from the state `Current` to `Next` if it reads the `Input`.
+    * a transition rule is a triple `[Current, Input, Next]`, which denotes that the automaton transitions from the state `Current` to `Next` if it reads the `Input`.
 * `FinishStates` is a list of names of states which are finishing.
 
 For example, the following compound term would represent the automaton below.
@@ -99,6 +102,8 @@ dfa(1, [
 </svg>
 </p>
 
+__Note:__ For string paring, the names of the states are insignificant. However, for conversion from DFA to RegExp, it is necessary that the states are named with numbers from $1$ to $n$, while the start state has the number $1$ assigned to it.
+
 #### NFA
 [Nondeterministic finite automaton](https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton) is represented similarly to above:
 
@@ -109,7 +114,7 @@ nfa(StartStates, TransitionFunction, FinishStates)
 Where:
 * `StartStates` is a __sorted list__ of names of the starting states,
 * `TransitionFunction` is a list of transition rules:
-    * transition rule is a triple `[Current, Input, NextStates]`, which denotes that the automaton transitions from the state `Current` to the __list__ of states `NextStates`, which are __sorted__ lexicographically, if it reads the `Input`.
+    * a transition rule is a triple `[Current, Input, NextStates]`, which denotes that the automaton transitions from the state `Current` to the __list__ of states `NextStates`, which are __sorted__ lexicographically, if it reads the `Input`.
 * `FinishStates` is a list of names of states which are finishing.
 
 For example, the following compound term would represent the automaton below.
@@ -151,7 +156,7 @@ nfa([1, 3], [
 
 ### Use
 #### Starting the program
-To start the file, make sure that `swipl` is a valid environment variable in zour environment. Then, open a terminal/cmd and tzpe the following:
+To start the file, make sure that `swipl` is a valid environment variable in your environment. Then, open a terminal/cmd and type the following:
 ```
 swipl [path_to_FSM-RegExp.pl]
 ```
@@ -206,7 +211,7 @@ Then press `;` to start the next test.
 ?- start_base_four_test.
 ```
 
-This is a test of parsing fraction in 4-base system. The test is run on the following NFA:
+This is a test of parsing fractions in the 4-base system. The test is run on the following NFA:
 
 <p style="text-align: center">
 <svg width="530" height="330" version="1.1" style="background-color: white; border-radius: 12px" xmlns="http://www.w3.org/2000/svg">
@@ -257,7 +262,7 @@ This is a test of parsing fraction in 4-base system. The test is run on the foll
 ?- start_exp_tree_test.
 ```
 
-This is a test of parsing string into an expression tree with regard to the priority of the operators. The anatomy of the tree is similar to the [Binary expression tree](https://en.wikipedia.org/wiki/Binary_expression_tree). The notation of each node is: `node(LeftSubtree, RightSubtree)` or, in unary operators, `node(Subtree)` or just `node` for nullary operators. The possible nodes are:
+This is a test of parsing a string into an expression tree with regard to the priority of the operators. The anatomy of the tree is similar to the [Binary expression tree](https://en.wikipedia.org/wiki/Binary_expression_tree). The notation of each node is: `node(LeftSubtree, RightSubtree)` or, in unary operators, `node(Subtree)` or just `node` for nullary operators. The possible nodes are:
 * `alt(L, R)` for $+$
 * `concat(L, R)` for $.$
 * `iter(T)` for $*$
@@ -300,7 +305,7 @@ The value `alt(concat(lam,sym(a)),iter(sym(b)))` corresponds to the following tr
 ?- start_fa_to_rege_to_fa_test.
 ```
 
-This tests demonstrates and tests both ways of conversion bewtween FA and RE. The original DFA is as follows.
+This test demonstrates and tests both ways of conversion between FA and RE. The original DFA is as follows.
 
 <p style="text-align: center">
 <svg width="300" height="270" version="1.1" style="background-color: white; border-radius: 12px" xmlns="http://www.w3.org/2000/svg">
@@ -410,13 +415,66 @@ Due to the conversion algorithm generating quite complicated results, it is hard
 ### Difference lists
 In many cases, predicates repeatedly concatenate two lists. By default, this operation runs in [$O(n)$](https://en.wikipedia.org/wiki/Big_O_notation)  time, where $n$ is the length of the first list. To avoid this, some predicates, such as `r/5` or `build_expr_tree1/5` use the [difference list](https://en.wikibooks.org/wiki/Prolog/Difference_Lists) data structure, which allows concatenation in $O(1)$  time.
 
-Conversion to a difference list from a regular list is effective $O(n)$ and therefore used as a prefered option.
+Conversion to a difference list from a regular list is effective $O(n)$ and therefore used as a preferred option.
 
 ### Sets
-Primarily in searching for all the current states in NFA parsing, a data structure that allows two operations - union and iteration is required. For this, a simple ordered list was chosen to implement the operations. The union works similarly to merging in [merge  sort](https://en.wikipedia.org/wiki/Merge_sort). The time complexity is therefore $O(n+m)$ for union (where $n$ and $m$ are the lenghts of the merged sets) and $O(n)$  for iteration through the set (where $n$ is the length of the set).
+Primarily in searching for all the current states in NFA parsing, a data structure that allows two operations - union and iteration is required. For this, a simple ordered list was chosen to implement the operations. The union works similarly to merging in [merge  sort](https://en.wikipedia.org/wiki/Merge_sort). The time complexity is therefore $O(n+m)$ for union (where $n$ and $m$ are the lengths of the merged sets) and $O(n)$  for iteration through the set (where $n$ is the length of the set).
 
 The time complexity is asymptotically optimal for both operations and therefore no other implementations were considered.
 
 ## Algorithms
 
-# WIP
+### DFA to RegExp
+
+The following recursive algorithm was used:
+ 1. Assign a number $1, ..., n$ to each state of the automaton. Number 1 is to be assigned to the start state. (_Note:_ as of right now, this part is done by the end-user - _TODO_)
+ 2. Construct the expressions $R_{i,j}^{(k)}$ as follows:
+	1. for $k=0$ and $i \ne j$: $R_{i,j}^{(0)} = a_1 + ... + a_m$, where $a_1, ..., a_m$ denote the symbols that allow the one-step transition from $i$ to $j$
+	2. for $k=0$ and $i = j$: $R_{i,i}^{(0)} = \lambda + a_1 + ... + a_m$, where $a_1, ..., a_m$ denote the symbols that allow the one-step transition from $i$ back to $i$
+	3. for $k>0$, $R_{i,j}^{(k)}$ is defined by induction:
+	$$R_{i,j}^{(k)} = R_{i,j}^{(k-1)} + R_{i,k}^{(k-1)}.R_{k,k}^{(k-1)}.R_{k,j}^{(k-1)}$$
+3. Finally, the resulting expression is obtained by combining the expression as follows: $$R=R_{i,f_1}^{(k)} + ... + R=R_{i,f_l}^{(k)}$$ where $f_1, ..., f_l$ are the finish states.
+
+#### Implementation
+Expressions $R_{i,j}^{(0)}$ are obtained trivially by definition, using the predicate `bagof/3`. This searches all the rules (whose number will be denoted by $r$) and then joins them with the $+$ operator in linear time. Finally, the resulting list is converted into a difference list. Therefore, the whole construction runs in time $O(r)$.
+
+For $R_{i,j}^{(k)}; k>0$, all the necessary lower degree $R$ expressions are obtained and combined together in time $O(1)$ - thanks to difference lists.
+
+Since the caching/dynprog is implemented (_TODO_), the same $R$ expression can be calculated multiple times, which yields the upper bound of $O(f.r.4^n)$, where $f$ is the number of finish states, $r$ is the number of rules and $n$ is the number of states.
+
+### RegExp to expression tree
+Since the infix notation is impractical for machine computation, an expression needs to be generated first. A recursive algorithm was used:
+1. For symbols and nullary operators, create a leaf.
+2. Otherwise, find the lowest priority operator, split the expression by it, create a corresponding node and create its successor trees recursively.
+
+#### Implementation
+In each call, the expression is stripped of the outer brackets. Each pair of brackets requires time $O(e)$ to strip. To strip all the brackets, the time required is $O(e.b)$ where $e$ is the length of the expression and $b$ is the number of outer brackets.
+
+Then, for each of the three operators, , the expression is searched, looking for the current operator that is not enclosed by a bracket. If such an operator is found, the expression is split and called recursively. This is done in time $O(e)$. Together with removing the brackets, the time is $O(e) + O(e.b) = O(e.b)$.
+
+Since for each character of the expression the recursion is called a constant amount of times, the required to construct the tree is $O(e^2b)$, or simply just $O(e^3)$. The resulting tree has $O(e)$ nodes.
+
+### Expression tree to NFA
+For each node of the expression tree, an automaton combining the automatons of its successors - details shown [here](https://www.tutorialspoint.com/what-is-the-conversion-of-a-regular-expression-to-finite-automata-nfa).
+
+#### Implementation
+For leaves, an automaton is constructed on time $O(1)$.
+
+For the inner nodes, however, even though only a constant amount of new states is added, linear time is needed to combine the transition functions of its successors (as difference lists are not implemented here, partially for consistency - _TODO_). Therefore, processing the entire tree takes $O(e^2)$ time.
+
+The entire conversion from RegExp to NFA consequently takes $O(e^3) + O(e^2) = O(e^3)$ time.
+
+
+## What is to be done - unfinished parts
+As of right now, the program is fully functional. However, there are some parts that can be done to improve its operation:
+
+### Optimization
+1. In the process of converting DFA into RegExp, dynamic programming should be used to prevent repetitive computation of the same $R_{i,j}^{(k)}$ expression. This could reduce the time complexity from exponential to polynomial.
+2. While processing an expression tree into an NFA, difference list representation of the transition function would be better suited and would allow processing nodes in constant time. However, this would not improve the time complexity of conversion from RegExp to NFA asymptotically.
+
+### User-friendliness
+1. The current implementation requires the users to abide by a set of strict notation rules, such as naming of the states and explicit operators in RegExp. The conversion to these strict norms could be made automatically in the future.
+2. Documentation could be more detailed for all predicates, not just the most important ones.
+
+## Conclusion
+The conversion from FSM to RegExp and vice versa was successfully implemented in Prolog. Since many of the algorithms were recursive, the implementation in prolog was relatively intuitive. However, we believe that procedural languages could achieve the same results in asymptotically shorter times.

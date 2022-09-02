@@ -103,7 +103,7 @@ r(TF, I, J, K, Expr) :- K_minus is K - 1,
     concat_dif(L3, [')'|D]-D, Expr),
     !.
 r(TF, I, J, K, Expr) :- K_minus is K - 1, 
-    r(TF, I, J, K_minus, Expr), !.
+    r(TF, I, J, K_minus, Expr), !. % the second part of the formula is empty
 r(TF, I, J, K, Expr) :- K_minus is K - 1, 
     r(TF, I, K, K_minus, E2),
     r(TF, K, K, K_minus, E3),
@@ -111,7 +111,7 @@ r(TF, I, J, K, Expr) :- K_minus is K - 1,
     concat_dif(['('|Tmp0]-Tmp0, E2, L0),
     join_lists_with(').(', L0, E3, L1),
     join_lists_with(')*.(', L1, E4, L2),
-    concat_dif(L2, [')'|Tmp1]-Tmp1, Expr).
+    concat_dif(L2, [')'|Tmp1]-Tmp1, Expr). % the first part of the formula is empty
 
 % helper predicate for foldl; simply changes the order of arguments
 generate_r(TF, Start, Max, Index, Res) :- r(TF, Start, Index, Max, Res).
